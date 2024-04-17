@@ -1,0 +1,10 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/zakiruogvm/Downloads/Gen2-UHF-RFID-Reader-master/gr-rfid/swig/_rfid_swig_doc_tag.cpp
+
