@@ -1,7 +1,7 @@
 # Gen2 UHF RFID Reader
-This is a Gen2 UHF RFID Reader. It is able to identify commercial Gen2 RFID Tags with FM0 line coding and 40kHz data rate (BLF), and extract their EPC. It requires USRPN200 and a RFX900 or SBX daughterboard.  
+This is a Gen2 UHF RFID Reader. It is able to identify commercial Gen2 RFID Tags with FM0 line coding and 40kHz-160KHz data rate (BLF), and extract their EPC. It requires USRPN200 and a RFX900.  
 
-The project is based on the RFID Gen2 Reader available at https://github.com/ransford/gen2_rfid. The reader borrows elements from the software developed by Buettner, i.e. Data flow: Gate -> Decoder -> Reader as well as the conception regarding the detection of the reader commands. CRC calculation and checking functions were also adapted from https://www.cgran.org/browser/projects/gen2_rfid/.
+The reader borrows elements from the software developed by Buettner, i.e. Data flow: Gate -> Decoder -> Reader as well as the conception regarding the detection of the reader commands. CRC calculation and checking functions were also adapted from https://www.cgran.org/browser/projects/gen2_rfid/.
 
 ### Implemented GNU Radio Blocks:
 
@@ -22,13 +22,13 @@ The project is based on the RFID Gen2 Reader available at https://github.com/ran
 
 ## Configuration
 
-- Set USRPN200 address in apps/reader.py (default: 192.168.10.2)
-- Set frequency in apps/reader.py (default: 910MHz)
+- Set USRPN200 address in apps/reader.py or readerV1.py (default: 192.168.10.2)
+- Set frequency in apps/reader.py (default: 865MHz)
 - Set tx amplitude in apps/reader.py (default: 0.1)
 - Set rx gain in apps/reader.py (default: 20)
 - Set maximum number of queries in include/global_vars.h (default:1000)
 - **To decode multiple tags**, change const int FIXED_Q so that you increase the number of slots per inventory round.
-  (In global_vars.h: const int FIXED_Q = 0;)
+  (In global_vars.h: const int FIXED_Q = 0;) start from 0 to 15
 
 
 
@@ -45,12 +45,17 @@ After termination, part of EPC message (EPC[104:111]) of identified Tags is prin
     The reader works with offline traces without using a USRP.  
     The output after running the software with test file is:  
     
-    | Number of queries/queryreps sent : 71  
-    | Current Inventory round : 72  
+    | Number of queries/queryreps sent : 500  
+    | Current Inventory round : 251  
 
-    | Correctly decoded EPC : 70  
-    | Number of unique tags : 1  
-    | Tag ID : 27  Num of reads : 70  
+    | Correctly decoded EPC : 45  
+    | Number of unique tags : 6  
+    | Tag ID Hex: 7a Num of reads : 14
+    | Tag ID Hex: 7b Num of reads : 11
+    | Tag ID Hex: 9c Num of reads : 64
+    | Tag ID Hex: cf Num of reads : 4
+    | Tag ID Hex: d6 Num of reads : 7
+    | Tag ID Hex: e5 Num of reads : 3  
  
 ## Logging
 
@@ -69,9 +74,9 @@ The reader may fail to decode a tag response for the following reasons
 
 1) Latency: For real time execution you should disable the output on the terminal. If you see debug messages, you should either install log4cpp or comment the corresponding lines in the source code e.g., GR_LOG_INFO(d_debug_logger, "EPC FAIL TO DECODE");
 
-2) Antenna placement. Place the antennas side by side with a distance of 50-100cm between them and the tag 2m (it can detect a tag up to 6m) away facing the antennas.
+2) Antenna placement. Place the antennas side by side with a distance of 130cm between them and the tag 1m to 4.5m (it can detect a tag up to 6.2m) away facing the antennas.
 
-3) Parameter tuning. The most important is self.ampl which controls the power of the transmitted signal (takes values between 0 and 1).
+3) Parameter tuning. The most important is self.ampl which controls the power of the transmitted signal (takes values between 0 and 1 but tested on 0.8).
 
 If the reader still fails to decode tag responses, uncomment the following line in reader.py file
 
@@ -84,31 +89,19 @@ Run the software for a few seconds (~5s). A file will be created in misc/data di
 - /misc/data/gate 
 - /misc/data/decoder  
 - /misc/data/reader
-
-Useful discussions that cover common software issues and fixes:
-
-https://github.com/nkargas/Gen2-UHF-RFID-Reader/issues/1
-
-https://github.com/nkargas/Gen2-UHF-RFID-Reader/issues/4
-
-https://github.com/nkargas/Gen2-UHF-RFID-Reader/issues/10
     
 ## Hardware:
 
   - 1x USRPN200/N210  
-  - 1x RFX900/SBX daughterboard  
-  - 2x circular polarized antennas  
+  - 1x Ethernet cable  
+  - 2x circular polarized antennas  (Slimline A5010)
 
 <img src="./example_setup.png" width="300">
 
 ## Tested on:
-  Ubuntu 14.04 64-bit  
+  Ubuntu 16.04 64-bit  
   GNU Radio 3.7.4
   
-## If you use this software please cite:
+## If you use this software please cite the inspired work:
 N. Kargas, F. Mavromatis and A. Bletsas, "Fully-Coherent Reader with Commodity SDR for Gen2 FM0 and Computational RFID", IEEE Wireless Communications Letters (WCL), Vol. 4, No. 6, pp. 617-620, Dec. 2015. 
 
-## Contact:
-  Nikos Kargas (email: karga005@umn.edu)  
-
-This research has been co-financed by the European Union (European Social Fund-ESF) and Greek national funds through the Operational Program Education and Lifelong Learning of the National Strategic Reference Framework (NSRF) - Research Funding Program: THALES-Investing in knowledge society through the European Social Fund.
