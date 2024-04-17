@@ -98,7 +98,7 @@ Run the software for a few seconds (~5s). A file will be created in misc/data di
 
 <p> Experimental Setup></p><img src="./example_setup.png" width="300">
 <p> Forward Walking </p><img src="./forward.png" width="200" >
-<img src="./6 Tags.png" width="200">
+<img src="./6 Tags.jpeg" width="200">
 
 ## Tested on:
   Ubuntu 16.04 64-bit  
